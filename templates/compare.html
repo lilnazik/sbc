@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comparison</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/compare.css') }}">
+</head>
+<body>
+    <h1>SBC Comparison</h1>
+    <table>
+        <thead>
+            <tr>
+                <th></th>
+                <th>
+                    <img src="{{ first['pic'] }}" alt="{{ first['name'] }}" style="max-height: 100px;">
+                    <br>{{ first['name'] }}
+                </th>
+                <th>
+                    <img src="{{ second['pic'] }}" alt="{{ second['name'] }}" style="max-height: 100px;">
+                    <br>{{ second['name'] }}
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for key, value in first['info'].items() %}
+                <tr>
+                    <td>{{ key }}</td>
+                    <td>{{ value }}</td>
+                    <td>{{ second['info'].get(key, '-') }}</td>
+                </tr>
+            {% endfor %}
+            <tr>
+                <td colspan="3" class="center"><strong>Benchmarks</strong></td>
+            </tr>
+            {% for key, value in first['benchmark'].items() %}
+                <tr>
+                    <td>{{ key }}</td>
+                    {% if key in ["7-zip multi", "7-zip single", "AES", "Memcpy", "Memset", "kH/s"] %}
+                        {% set first_value = value | float %}
+                        {% set second_value = second['benchmark'].get(key, '-') | float %}
+                        <td class="{{ 'highlight' if first_value > second_value else '' }}">{{ value }}</td>
+                        <td class="{{ 'highlight' if second_value > first_value else '' }}">{{ second['benchmark'].get(key, '-') }}</td>
+                    {% else %}
+                        <td>{{ value }}</td>
+                        <td>{{ second['benchmark'].get(key, '-') }}</td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+        </tbody>
+        {% if result.__class__.__name__ == "tuple" %}
+            <td colspan="3" class="center"><strong>{{ result[0] }}</strong> is <strong>{{ result[1] }}%</strong> better on average</td>
+        {% else %}
+            <td colspan="3" class="center"><strong>{{ result }}</strong></td>
+        {% endif %}
+    </table>
+    <div class="center">
+        <button onclick="window.location.href='/'">Go Home</button>
+    </div>
+</body>
+</html>
