@@ -1,7 +1,6 @@
 import json
 
 from flask import Flask, request, render_template, url_for
-from waitress import serve
 from parser import get_full_info
 
 app = Flask(__name__)
@@ -60,6 +59,5 @@ def index():
         return render_template('index.html', sbc_list=sbc_list)
 
 if __name__ == "__main__":
-    
-    serve(app, host='0.0.0.0', port=80)
+    app.run()
     
