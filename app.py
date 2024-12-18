@@ -6,6 +6,9 @@ from parser import get_full_info
 
 app = Flask(__name__)
 
+with open("sbc.json", "r", encoding="utf-8") as f:
+        sbc_list = json.load(f)
+        
 def compare_products_dynamic(first, second):
     values_product1 = [int(x) for x in first["benchmark"].values() if x.isdigit()]
     values_product2 = [int(x) for x in second["benchmark"].values() if x.isdigit()]
@@ -57,7 +60,6 @@ def index():
         return render_template('index.html', sbc_list=sbc_list)
 
 if __name__ == "__main__":
-    with open("sbc.json", "r", encoding="utf-8") as f:
-        sbc_list = json.load(f)
+    
     serve(app, host='0.0.0.0', port=80)
     
